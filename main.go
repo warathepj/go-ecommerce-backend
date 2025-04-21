@@ -96,6 +96,41 @@ func insertMockProducts(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func getProducts(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	collection := db.Collection("products")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Find all products
+	cursor, err := collection.Find(ctx, map[string]interface{}{})
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to fetch products: %v", err), http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	// Decode products
+	var products []Product
+	if err = cursor.All(ctx, &products); err != nil {
+		http.Error(w, fmt.Sprintf("Failed to decode products: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	// Enable CORS
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	// Return products as JSON
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(products)
+}
+
 func main() {
 	// Initialize MongoDB connection
 	if err := initMongoDB(); err != nil {
@@ -110,6 +145,7 @@ func main() {
 	// Register routes
 	http.HandleFunc("/", helloHandler)
 	http.HandleFunc("/api/products/mock", insertMockProducts)
+	http.HandleFunc("/api/products", getProducts)
 
 	// Start server
 	fmt.Println("Server starting on port 8080...")
