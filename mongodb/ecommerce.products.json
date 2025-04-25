@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "6805b3997eb36fb5596b7fc7"
+  },
+  "id": 1,
+  "name": "Wireless Mouse",
+  "description": "Ergonomic wireless mouse with long battery life.",
+  "price": 25.99,
+  "imageUrl": "https://placehold.co/300x200/e2e8f0/64748b?text=Wireless+Mouse"
+},
+{
+  "_id": {
+    "$oid": "6805b3997eb36fb5596b7fc8"
+  },
+  "id": 2,
+  "name": "Mechanical Keyboard",
+  "description": "RGB backlit mechanical keyboard with blue switches.",
+  "price": 79.99,
+  "imageUrl": "https://placehold.co/300x200/e2e8f0/64748b?text=Mechanical+Keyboard"
+},
+{
+  "_id": {
+    "$oid": "6805b3997eb36fb5596b7fc9"
+  },
+  "id": 3,
+  "name": "USB-C Hub",
+  "description": "7-in-1 USB-C hub with HDMI, SD card reader, and USB 3.0 ports.",
+  "price": 35.5,
+  "imageUrl": "https://placehold.co/300x200/e2e8f0/64748b?text=USB-C+Hub"
+},
+{
+  "_id": {
+    "$oid": "6805b3997eb36fb5596b7fca"
+  },
+  "id": 4,
+  "name": "Laptop Stand",
+  "description": "Adjustable aluminum laptop stand for better ergonomics.",
+  "price": 22,
+  "imageUrl": "https://placehold.co/300x200/e2e8f0/64748b?text=Laptop+Stand"
+},
+{
+  "_id": {
+    "$oid": "6805b3997eb36fb5596b7fcb"
+  },
+  "id": 5,
+  "name": "Webcam 1080p",
+  "description": "Full HD 1080p webcam with built-in microphone.",
+  "price": 45.99,
+  "imageUrl": "https://placehold.co/300x200/e2e8f0/64748b?text=Webcam"
+},
+{
+  "_id": {
+    "$oid": "6805b3997eb36fb5596b7fcc"
+  },
+  "id": 6,
+  "name": "Bluetooth Speaker",
+  "description": "Portable waterproof Bluetooth speaker with rich bass.",
+  "price": 55,
+  "imageUrl": "https://placehold.co/300x200/e2e8f0/64748b?text=Bluetooth+Speaker"
+}]

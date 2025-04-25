@@ -1,0 +1,28 @@
+[{
+  "_id": "ORD-1745460796235945800",
+  "customerName": "oak snw",
+  "status": "PENDING",
+  "shippingAddress": {
+    "street": "route66",
+    "city": "bangna",
+    "state": "bangkok",
+    "postalCode": "12345",
+    "country": "Thailand"
+  },
+  "items": [
+    {
+      "productId": 4,
+      "quantity": 1,
+      "priceAtTime": 22
+    }
+  ],
+  "subtotal": 22,
+  "tax": 2.2,
+  "total": 24.200000000000003,
+  "createdAt": {
+    "$date": "2025-04-24T02:13:16.235Z"
+  },
+  "updatedAt": {
+    "$date": "2025-04-24T02:13:16.235Z"
+  }
+}]
