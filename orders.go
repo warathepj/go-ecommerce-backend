@@ -34,6 +34,7 @@ const (
 
 type Order struct {
 	ID              string      `json:"id" bson:"_id"`
+	CustomerName    string      `json:"customerName" bson:"customerName"`
 	Status          OrderStatus `json:"status" bson:"status"`
 	ShippingAddress Address     `json:"shippingAddress" bson:"shippingAddress"`
 	Items           []OrderItem `json:"items" bson:"items"`
@@ -46,8 +47,8 @@ type Order struct {
 
 type OrderRequest struct {
 	UserDetails struct {
-		Name    string `json:"name"`
-		Address string `json:"address"`
+		Name    string  `json:"name"`
+		Address Address `json:"address"`
 	} `json:"userDetails"`
 	Items    []OrderItem `json:"items"`
 	Subtotal float64     `json:"subtotal"`
@@ -84,21 +85,16 @@ func createOrder(w http.ResponseWriter, r *http.Request) {
 
 	// Create order document
 	order := Order{
-		ID:     generateOrderID(), // You'll need to implement this
-		Status: OrderStatus("PENDING"),
-		ShippingAddress: Address{
-			Street:     orderReq.UserDetails.Address,
-			City:       "", // These could be parsed from the address string
-			State:      "",
-			PostalCode: "",
-			Country:    "",
-		},
-		Items:     orderReq.Items,
-		Subtotal:  orderReq.Subtotal,
-		Tax:       orderReq.Tax,
-		Total:     orderReq.Total,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		ID:              generateOrderID(),
+		CustomerName:    orderReq.UserDetails.Name,
+		Status:          OrderStatusPending,
+		ShippingAddress: orderReq.UserDetails.Address, // Use the full address structure
+		Items:           orderReq.Items,
+		Subtotal:        orderReq.Subtotal,
+		Tax:             orderReq.Tax,
+		Total:           orderReq.Total,
+		CreatedAt:       time.Now(),
+		UpdatedAt:       time.Now(),
 	}
 
 	collection := db.Collection("orders")
