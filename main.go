@@ -57,18 +57,38 @@ func main() {
 func getProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	if r.Method == "GET" {
-		// Fetch products from MongoDB
+	switch r.Method {
+	case "GET":
 		products, err := fetchProductsFromDB()
 		if err != nil {
 			http.Error(w, "Failed to fetch products", http.StatusInternalServerError)
 			return
 		}
-
-		// Return products as JSON
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(products)
-	} else {
+	case "POST":
+		var product map[string]interface{}
+		if err := json.NewDecoder(r.Body).Decode(&product); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		collection := client.Database("ecommerce").Collection("products")
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		result, err := collection.InsertOne(ctx, product)
+		if err != nil {
+			http.Error(w, "Failed to add product", http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"message": "Product added successfully",
+			"id":      result.InsertedID,
+		})
+	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 }
