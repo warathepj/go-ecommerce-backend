@@ -44,6 +44,7 @@ func main() {
 	http.HandleFunc("/", enableCORS(helloHandler))
 	http.HandleFunc("/api/products", enableCORS(getProducts))
 	http.HandleFunc("/api/orders", enableCORS(createOrder))
+	http.HandleFunc("/api/skus", enableCORS(handleSkus)) // Add this line
 
 	// Start server
 	fmt.Println("Server starting on port 8080...")
