@@ -40,6 +40,12 @@ func main() {
 		}
 	}()
 
+	// Log product with ID=2 when the server starts
+	logProductWithID2()
+	
+	// Log all products when the server starts
+	logAllProducts()
+
 	// Register routes with CORS middleware
 	http.HandleFunc("/", enableCORS(helloHandler))
 	http.HandleFunc("/api/products", enableCORS(getProducts))
@@ -52,6 +58,34 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
+}
+
+// logProductWithID2 fetches and logs the product with ID=2 from the database
+func logProductWithID2() {
+	collection := client.Database("ecommerce").Collection("products")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Create a filter for product with id=2
+	filter := bson.M{"id": 2}
+	
+	// Find the product
+	var product map[string]interface{}
+	err := collection.FindOne(ctx, filter).Decode(&product)
+	if err != nil {
+		log.Printf("Error finding product with ID=2: %v", err)
+		return
+	}
+
+	// Convert the product to JSON for pretty printing
+	productJSON, err := json.MarshalIndent(product, "", "  ")
+	if err != nil {
+		log.Printf("Error marshaling product data: %v", err)
+		return
+	}
+
+	// Log the product data
+	log.Printf("=== Product with ID=2 ===\n%s\n=======================", string(productJSON))
 }
 
 // getProducts handles requests for product data
@@ -95,6 +129,7 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 // fetchProductsFromDB retrieves products from MongoDB
+// fetchProductsFromDB retrieves products from MongoDB
 func fetchProductsFromDB() ([]map[string]interface{}, error) {
 	collection := client.Database("ecommerce").Collection("products")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -112,4 +147,26 @@ func fetchProductsFromDB() ([]map[string]interface{}, error) {
 	}
 
 	return products, nil
+}
+
+// logAllProducts fetches and logs all products from the database
+func logAllProducts() {
+	products, err := fetchProductsFromDB()
+	if err != nil {
+		log.Printf("Error fetching products: %v", err)
+		return
+	}
+
+	log.Printf("=== All Products (%d) ===", len(products))
+	for i, product := range products {
+		// Convert the product to JSON for pretty printing
+		productJSON, err := json.MarshalIndent(product, "", "  ")
+		if err != nil {
+			log.Printf("Error marshaling product data: %v", err)
+			continue
+		}
+		
+		log.Printf("Product %d:\n%s", i+1, string(productJSON))
+	}
+	log.Println("=======================")
 }
